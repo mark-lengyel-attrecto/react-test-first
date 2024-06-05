@@ -1,0 +1,12 @@
+:root {
+  .card-footer {
+    padding: var(--bs-card-cap-padding-x) var(--bs-card-cap-padding-y);
+    border-left: var(--bs-card-border-width) solid var(--bs-card-border-color);
+    border-top: none;
+
+    &:last-child {
+      border-radius: 0 var(--bs-card-inner-border-radius)
+        var(--bs-card-inner-border-radius) 0;
+    }
+  }
+}
