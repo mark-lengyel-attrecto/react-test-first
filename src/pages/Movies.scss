@@ -1,0 +1,9 @@
+@import "~bootstrap/scss/bootstrap-grid";
+
+:root {
+  .descending-button-wrapper {
+    @include media-breakpoint-up(lg) {
+      max-width: 5rem;
+    }
+  }
+}

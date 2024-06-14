@@ -1,0 +1,18 @@
+:root {
+  .card-img {
+    min-width: 5rem;
+    width: 5rem;
+  }
+
+  .card-footer {
+    min-width: 10rem;
+    padding: var(--bs-card-cap-padding-x) var(--bs-card-cap-padding-y);
+    border-left: var(--bs-card-border-width) solid var(--bs-card-border-color);
+    border-top: none;
+
+    &:last-child {
+      border-radius: 0 var(--bs-card-inner-border-radius)
+        var(--bs-card-inner-border-radius) 0;
+    }
+  }
+}
