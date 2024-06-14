@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
+
 import { Button } from "react-bootstrap";
 import { Variant } from "react-bootstrap/esm/types";
 
@@ -11,7 +12,7 @@ interface AppButtonProps {
   size?: "lg" | "sm";
 }
 
-const AppButton: React.FC<AppButtonProps> = ({
+const AppButton: FC<AppButtonProps> = ({
   variant,
   onClick,
   className,

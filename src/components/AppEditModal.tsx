@@ -1,21 +1,20 @@
-import { useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
+
 import { Form, InputGroup } from "react-bootstrap";
-import { Pencil } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { IMovie } from "../models/movie.interface";
+import { Pencil } from "react-bootstrap-icons";
+
+import { MovieModel } from "../models/movie.model";
+import AppButton from "./AppButton";
 
 interface AppEditModalProps {
-  movie: IMovie;
-  onSave?: (edited: IMovie) => void;
+  movie: MovieModel;
+  onSave?: (edited: MovieModel) => void;
   className?: string;
 }
 
-const AppEditModal: React.FC<AppEditModalProps> = ({
-  movie,
-  onSave,
-  className,
-}) => {
+const AppEditModal: FC<AppEditModalProps> = ({ movie, onSave, className }) => {
   const [show, setShow] = useState(false);
   const [edited, setEdited] = useState(movie);
 
@@ -33,18 +32,20 @@ const AppEditModal: React.FC<AppEditModalProps> = ({
 
   const handleEdit = ({
     target: { id, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  }: ChangeEvent<HTMLInputElement>) => {
     setEdited({
       ...edited,
       [id]: value,
     });
   };
 
+  const handleDisabled = () => Object.values(edited).some((value) => !value);
+
   return (
     <>
-      <Button className={className} variant="success" onClick={handleShow}>
+      <AppButton className={className} variant="success" onClick={handleShow}>
         <Pencil />
-      </Button>
+      </AppButton>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -94,7 +95,7 @@ const AppEditModal: React.FC<AppEditModalProps> = ({
           <Button
             variant="primary"
             onClick={handleSave}
-            disabled={Object.values(edited).some((value) => !value)}
+            disabled={handleDisabled()}
           >
             Save Changes
           </Button>

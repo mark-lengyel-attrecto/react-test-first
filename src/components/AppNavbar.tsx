@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
+
 import { Card, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 
@@ -7,7 +8,7 @@ interface AppNavbarProps {
   children?: ReactNode;
 }
 
-const AppNavbar: React.FC<AppNavbarProps> = ({ className, children }) => {
+const AppNavbar: FC<AppNavbarProps> = ({ className, children }) => {
   return (
     <Card className={className}>
       <Card.Header>

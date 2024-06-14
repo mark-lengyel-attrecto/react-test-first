@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { ChangeEvent, useState } from "react";
+
 import { Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import {
   SortAlphaDown,
@@ -6,13 +7,15 @@ import {
   SortNumericDown,
   SortNumericDownAlt,
 } from "react-bootstrap-icons";
+
 import AppButton from "../components/AppButton";
 import AppListItem from "../components/AppListItem";
 import { MOVIES } from "../data/movies";
-import { IMovie } from "../models/movie.interface";
+import { MovieModel } from "../models/movie.model";
+
 import "./Movies.scss";
 
-enum MovieOrder {
+enum MovieSortBy {
   ALPHABETICAL = "alphabetical",
   RATING = "rating",
   YEAR = "year",
@@ -21,24 +24,21 @@ enum MovieOrder {
 function Movies() {
   const [movies, setMovies] = useState(MOVIES);
   const [search, setSearch] = useState("");
-  const [descending, setDescending] = useState(true);
-  const [order, setOrder] = useState(MovieOrder.RATING);
+  const [order, setOrder] = useState(true);
+  const [sortBy, setSortBy] = useState(MovieSortBy.RATING);
 
-  const getListItems = (movies: IMovie[]) => {
-    return movies.map((movie, index) => {
-      return (
-        <AppListItem
-          key={movie.id}
-          movie={movie}
-          index={index + 1}
-          onEdit={editMovie}
-          onDelete={deleteMovie}
-        />
-      );
-    });
-  };
+  const getListItems = (movies: MovieModel[]) =>
+    movies.map((movie, index) => (
+      <AppListItem
+        key={movie.id}
+        movie={movie}
+        index={index + 1}
+        onEdit={editMovie}
+        onDelete={deleteMovie}
+      />
+    ));
 
-  const editMovie = (edited: IMovie) => {
+  const editMovie = (edited: MovieModel) => {
     setMovies(
       movies.map((movie) => {
         if (movie.id === edited.id) {
@@ -50,58 +50,52 @@ function Movies() {
     );
   };
 
-  const deleteMovie = (deleted: IMovie) => {
+  const deleteMovie = (deleted: MovieModel) => {
     setMovies(movies.filter((movie) => movie.id !== deleted.id));
   };
 
-  const filterMovies = (movies: IMovie[]) => {
+  const filterMovies = (movies: MovieModel[]) => {
     const filtered = movies
       .filter((movie) =>
         movie.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
       )
       .sort((a, b) => {
-        switch (order) {
-          case MovieOrder.ALPHABETICAL:
-            return a.title.localeCompare(b.title);
-          case MovieOrder.RATING:
-            return b.rating - a.rating;
-          case MovieOrder.YEAR:
-            return b.year - a.year;
-        }
+        const movieSortBy = {
+          [MovieSortBy.ALPHABETICAL]: a.title.localeCompare(b.title),
+          [MovieSortBy.RATING]: b.rating - a.rating,
+          [MovieSortBy.YEAR]: b.year - a.year,
+        };
+
+        return movieSortBy[sortBy];
       });
 
-    return descending ? filtered : filtered.reverse();
+    return order ? filtered : filtered.reverse();
   };
 
   const handleSearchChange = ({
     target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  }: ChangeEvent<HTMLInputElement>) => {
     setSearch(value);
   };
 
-  const handleSortChange = ({
+  const handleSortByChange = ({
     target: { value },
-  }: React.ChangeEvent<HTMLSelectElement>) => {
-    setOrder(value as MovieOrder);
+  }: ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(value as MovieSortBy);
   };
 
-  const getOrderIcon = (size: number = 20) => {
-    let asc = <></>;
-    let desc = <></>;
+  const handleOrderChange = () => setOrder(!order);
 
-    switch (order) {
-      case MovieOrder.ALPHABETICAL:
-        asc = <SortAlphaDownAlt size={size} />;
-        desc = <SortAlphaDown size={size} />;
-        break;
-      case MovieOrder.RATING:
-      case MovieOrder.YEAR:
-        asc = <SortNumericDown size={size} />;
-        desc = <SortNumericDownAlt size={size} />;
-        break;
+  const getSortIcon = (size: number = 20) => {
+    let asc = <SortNumericDown size={size} />;
+    let desc = <SortNumericDownAlt size={size} />;
+
+    if (sortBy === MovieSortBy.ALPHABETICAL) {
+      asc = <SortAlphaDownAlt size={size} />;
+      desc = <SortAlphaDown size={size} />;
     }
 
-    return descending ? desc : asc;
+    return order ? desc : asc;
   };
 
   return (
@@ -120,10 +114,10 @@ function Movies() {
           <Col lg="2" md="4">
             <InputGroup className="mb-3">
               <InputGroup.Text>Sort by</InputGroup.Text>
-              <Form.Select value={order} onChange={handleSortChange}>
-                <option value={MovieOrder.ALPHABETICAL}>Alphabetical</option>
-                <option value={MovieOrder.RATING}>Rating</option>
-                <option value={MovieOrder.YEAR}>Year</option>
+              <Form.Select value={sortBy} onChange={handleSortByChange}>
+                <option value={MovieSortBy.ALPHABETICAL}>Alphabetical</option>
+                <option value={MovieSortBy.RATING}>Rating</option>
+                <option value={MovieSortBy.YEAR}>Year</option>
               </Form.Select>
             </InputGroup>
           </Col>
@@ -131,9 +125,9 @@ function Movies() {
             <AppButton
               className="w-100 mb-3"
               variant="primary"
-              onClick={() => setDescending(!descending)}
+              onClick={handleOrderChange}
             >
-              {getOrderIcon()}
+              {getSortIcon()}
             </AppButton>
           </Col>
         </Row>

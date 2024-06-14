@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import "./App.scss";
+
 import AppNavbar from "./components/AppNavbar";
 import Movies from "./pages/Movies";
 import Sandbox from "./pages/Sandbox";
+
+import "./App.scss";
 
 function App() {
   return (

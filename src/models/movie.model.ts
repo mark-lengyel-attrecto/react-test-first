@@ -1,4 +1,4 @@
-export interface IMovie {
+export interface MovieModel {
   id: number;
   title: string;
   year: number;

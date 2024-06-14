@@ -1,6 +1,6 @@
-import { IMovie } from "../models/movie.interface";
+import { MovieModel } from "../models/movie.model";
 
-export const MOVIES: IMovie[] = [
+export const MOVIES: MovieModel[] = [
   {
     id: 1,
     title: "The Shawshank Redemption",

@@ -1,29 +1,32 @@
+import { FC } from "react";
+
 import { Card } from "react-bootstrap";
 import { StarFill, Trash } from "react-bootstrap-icons";
-import { IMovie } from "../models/movie.interface";
+
+import { MovieModel } from "../models/movie.model";
 import AppButton from "./AppButton";
 import AppEditModal from "./AppEditModal";
+
 import "./AppListItem.scss";
 
 interface AppListItemProps {
-  movie: IMovie;
-  onEdit: (edited: IMovie) => void;
-  onDelete: (deleted: IMovie) => void;
+  movie: MovieModel;
+  onEdit: (edited: MovieModel) => void;
+  onDelete: (deleted: MovieModel) => void;
   index?: number;
 }
 
-const AppListItem: React.FC<AppListItemProps> = ({
+const AppListItem: FC<AppListItemProps> = ({
   movie,
   onEdit,
   onDelete,
   index,
 }) => {
+  const handleDelete = () => onDelete(movie);
+
   return (
     <Card className="d-flex flex-row justify-content-between">
-      <Card.Img
-        style={{ minWidth: "5rem", width: "5rem" }}
-        src={movie.thumbnail}
-      />
+      <Card.Img src={movie.thumbnail} />
 
       <Card.Body className="align-self-center d-block text-truncate">
         <Card.Title className="d-block text-truncate">
@@ -32,7 +35,7 @@ const AppListItem: React.FC<AppListItemProps> = ({
         </Card.Title>
       </Card.Body>
 
-      <Card.Footer style={{ minWidth: "10rem" }}>
+      <Card.Footer>
         <div className="container d-flex flex-column h-100">
           <Card className="row mb-1">
             <Card.Body className="col d-flex justify-content-center align-items-center p-2">
@@ -42,11 +45,7 @@ const AppListItem: React.FC<AppListItemProps> = ({
           </Card>
 
           <div className="row gap-1">
-            <AppButton
-              className="col"
-              variant="danger"
-              onClick={() => onDelete(movie)}
-            >
+            <AppButton className="col" variant="danger" onClick={handleDelete}>
               <Trash />
             </AppButton>
 
